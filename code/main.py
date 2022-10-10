@@ -1,4 +1,4 @@
-#import node2vec
+import node2vec
 import networkx as nx
 
 

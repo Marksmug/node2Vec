@@ -1,5 +1,5 @@
 import networkx as nx
-from gensim.models import Word2Vec
+#from gensim.models import Word2Vec
 import numpy as np
 
 
