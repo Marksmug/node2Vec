@@ -5,6 +5,7 @@ import numpy as np
 
 
 
+
 class Graph():
     def __init__(self, G, is_directed, p ,q):
         self.G = G
@@ -66,6 +67,58 @@ class Graph():
         return create_alias_table(normarlized_probs)
 
 
+    def draw_walks(self, walks_num, walk_length):
+        g = self.G
+
+
+        walks = []
+
+        for i in range(walks):
+            for start_node in g.nodes():
+                walk = self.node2vecWalk(start_node, walk_length)
+                walks.append(walk)
+
+        return walks
+
+    def node2vecWalk(self, start_node, walk_length):
+
+        g = self.G
+        transision_probs_nodes = self.transition_probs_nodes
+        transision_probs_edges = self.transition_probs_edges
+
+        walk = []
+        walk.append(start_node)
+
+        for i in range(walk_length):
+            cur_node = walk[i]
+
+            # make sure the index of neighbors is the same as the alias_table
+            cur_neighbors = sorted(g.neighbors(cur_node))
+            if len(cur_neighbors) == 0:
+                break
+            else:
+
+                # if it's srtarting node, sample from its neighbors
+                if i == 0:
+                    nb_index = alias_draw(transision_probs_nodes[cur_node][0], transision_probs_nodes[cur_node][1])
+                    next_node = cur_neighbors[nb_index]
+                    walk.append(next_node)
+
+                # if it's not starting node, sample based on the edge between previous node and current node
+                else:
+                    pre_node = walk[i-1]
+                    edge = (pre_node, cur_node)
+                    nb_index = alias_draw(transision_probs_edges[edge][0], transision_probs_edges[edge][1])
+                    next_node = cur_neighbors[nb_index]
+                    walk.append(next_node)
+
+        return walk
+
+
+
+
+
+
 
 
 def create_alias_table(probs):
@@ -121,8 +174,8 @@ def alias_draw(prob_list, another_nb_list):
     i = int(np.random.random() * n)
 
     #generate a number between 0 to 1 randomly
-    r = np.random.random
-    if r < prob_list[i]:
+    r = float(np.random.random())
+    if r < float(prob_list[i]):
         return i
     else:
         return another_nb_list[i]
