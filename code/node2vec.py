@@ -1,6 +1,6 @@
-import networkx as nx
-#from gensim.models import Word2Vec
+
 import numpy as np
+import random
 
 
 
@@ -72,9 +72,11 @@ class Graph():
 
 
         walks = []
+        nodes = list(g.nodes())
 
-        for i in range(walks):
-            for start_node in g.nodes():
+        for i in range(walks_num):
+            random.shuffle(nodes)
+            for start_node in nodes:
                 walk = self.node2vecWalk(start_node, walk_length)
                 walks.append(walk)
 
@@ -89,7 +91,8 @@ class Graph():
         walk = []
         walk.append(start_node)
 
-        for i in range(walk_length):
+        for i in range(walk_length-1):
+
             cur_node = walk[i]
 
             # make sure the index of neighbors is the same as the alias_table
